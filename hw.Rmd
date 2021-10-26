@@ -1,0 +1,151 @@
+---
+title: "API Lab & Homework"
+author: "Alex Vand"
+date: "10/25/2021"
+output:
+  html_document:
+    code_folding: hide
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE)
+```
+
+```{r, message=FALSE}
+library(tidyverse)
+library(dataRetrieval)
+library(metajam)
+```
+
+### Exercise 1: Data retrieval
+
+```{r}
+siteNumber <- "11118500"
+parameterCd <- "00060"  # Discharge
+startDate <- "2019-10-01"  
+endDate <- "2020-10-05"
+
+data <- readNWISdv(siteNumber, parameterCd, startDate, endDate)
+```
+
+```{r}
+discharge_plot <- ggplot(data = data, aes(x = Date, y = X_00060_00003)) +
+  geom_point() +
+  labs(title = "Discharge time series for the Ventura River",
+       x = "Date",
+       y = "Discharge")
+discharge_plot
+```
+
+### Bonus
+
+```{r}
+siteNumber <- "11118500"
+parameterCd <- "00060"  # Discharge
+startDate <- ""  
+endDate <- "2020-10-05"
+
+all_data <- readNWISdv(siteNumber, parameterCd, startDate, endDate)
+min_date <- min(all_data$Date)
+```
+This stream gauge record started using the API on `r min_date`.
+
+### Assignment 2.1
+
+```{r}
+siteNumber <- c(11118500, 11113500)
+parameterCd <- "00060"  # Discharge
+startDate <- "2021-10-04"  
+endDate <- "2021-10-05"
+
+data2 <- readNWISuv(siteNumber, parameterCd, startDate, endDate)
+```
+
+```{r}
+discharge_plot2 <- ggplot(data = data2, aes(x = dateTime, y = X_00060_00000)) +
+  geom_line(aes(color = site_no)) +
+  labs(title = "Discharge time series for the Ventura River",
+       x = "Date",
+       y = "Discharge") +
+  scale_color_discrete(name = "Site",
+                    breaks = c(11118500, 11113500),
+                    labels = c("Ventura", "Santa Paula"))
+discharge_plot2
+```
+
+```{r}
+ventura_data <- data2 %>%
+  filter(site_no == 11118500)
+
+ventura_peak <- ventura_data %>%
+  filter(X_00060_00000 == max(X_00060_00000))
+```
+
+The stream flow at the Ventura location peaked between `r min(ventura_peak$dateTime)` and `r max(ventura_peak$dateTime)`.
+
+```{r}
+santa_paula_data <- data2 %>%
+  filter(site_no == 11113500)
+
+santa_paula_peak <- santa_paula_data %>%
+  filter(X_00060_00000 == max(X_00060_00000))
+```
+
+The stream flow at the Santa Paula location peaked between `r min(santa_paula_peak$dateTime)` and `r max(santa_paula_peak$dateTime)`.
+
+### Practice with rain event on 2021-10-25
+
+```{r}
+siteNumber <- c(11118500, 11113500)
+parameterCd <- "00060"  # Discharge
+startDate <- "2021-10-24"  
+endDate <- "2021-10-25"
+
+data3 <- readNWISuv(siteNumber, parameterCd, startDate, endDate)
+```
+
+```{r}
+discharge_plot3 <- ggplot(data = data3, aes(x = dateTime, y = X_00060_00000)) +
+  geom_line(aes(color = site_no)) +
+  labs(title = "Discharge time series for the Ventura River",
+       x = "Date",
+       y = "Discharge") +
+  scale_color_discrete(name = "Site",
+                    breaks = c(11118500, 11113500),
+                    labels = c("Ventura", "Santa Paula"))
+discharge_plot3
+```
+
+```{r}
+ventura_data <- data3 %>%
+  filter(site_no == 11118500)
+
+ventura_peak <- ventura_data %>%
+  filter(X_00060_00000 == max(X_00060_00000))
+```
+
+The stream flow at the Ventura location peaked between `r min(ventura_peak$dateTime)` and `r max(ventura_peak$dateTime)`.
+
+
+```{r}
+santa_paula_data <- data3 %>%
+  filter(site_no == 11113500)
+
+santa_paula_peak <- santa_paula_data %>%
+  filter(X_00060_00000 == max(X_00060_00000))
+```
+
+The stream flow at the Santa Paula location peaked between `r min(santa_paula_peak$dateTime)` and `r max(santa_paula_peak$dateTime)`.
+
+### Exercise 2: `metajam`
+
+### Assignment 2.2
+
+```{r}
+
+```
+
+
+
+
+
