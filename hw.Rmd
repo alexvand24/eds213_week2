@@ -151,7 +151,8 @@ local_path <- metajam::download_d1_data(data_url, "C:/Users/Alex Vand/Documents/
 
 Read the data
 
-```{r}
+```{r, message = FALSE, warning = FALSE}
+local_path <- "download_data/doi_10.5063_F1CJ8BPH__household_language__csv"
 hh_list <- metajam::read_d1_files(local_path)
 hh_data <- hh_list$data
 hh_att_metadata <- hh_list$attrubute_metadata
@@ -163,7 +164,6 @@ Create a plot by year from 2009 to 2015 showing the average percentage of househ
 english_data <- hh_data %>% filter(Year == c(2009:2015)) %>% 
   group_by(Year) %>% 
   summarize(pct_english = mean(speak_only_english)/mean(total) * 100)
-english_data
 ```
 
 
