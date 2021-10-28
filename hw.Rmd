@@ -141,9 +141,60 @@ The stream flow at the Santa Paula location peaked between `r min(santa_paula_pe
 
 ### Assignment 2.2
 
-```{r}
+Download the data
 
+```{r, eval = FALSE}
+data_url <- "https://knb.ecoinformatics.org/knb/d1/mn/v2/object/urn%3Auuid%3A7fc6f6db-c5ea-426a-a743-1f2edafb43b8"
+
+local_path <- metajam::download_d1_data(data_url, "C:/Users/Alex Vand/Documents/EDS_213/eds213_week2/download_data")
 ```
+
+Read the data
+
+```{r}
+hh_list <- metajam::read_d1_files(local_path)
+hh_data <- hh_list$data
+hh_att_metadata <- hh_list$attrubute_metadata
+```
+
+Create a plot by year from 2009 to 2015 showing the average percentage of household speaking only English at the State level (one data point per year)
+
+```{r}
+english_data <- hh_data %>% filter(Year == c(2009:2015)) %>% 
+  group_by(Year) %>% 
+  summarize(pct_english = mean(speak_only_english)/mean(total) * 100)
+english_data
+```
+
+
+```{r}
+english_plot <-
+  ggplot(data = english_data, aes(x = Year, y = pct_english)) +
+    geom_point() +
+    geom_line() +
+    labs(y = "Average % of households speaking English only")
+english_plot
+```
+
+```{r}
+french_data <- hh_data %>% filter(Year == c(2009:2015)) %>%
+#  mutate(french = sum(french_or_french_creole, french_incl_patois_cajun, french_creole, na.rm = TRUE)) %>% 
+  group_by(Year) %>% 
+  summarize(pct_french = mean(french_or_french_creole, na.rm = TRUE) /
+                         mean(total) * 100)
+french_data
+```
+
+```{r}
+french_plot <-
+  ggplot(data = french_data, aes(x = Year, y = pct_french)) +
+    geom_point() +
+    geom_line() +
+    labs(y = "Average % of households speaking French")
+french_plot
+```
+
+
 
 
 
