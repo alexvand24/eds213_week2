@@ -176,23 +176,6 @@ english_plot <-
 english_plot
 ```
 
-```{r}
-french_data <- hh_data %>% filter(Year == c(2009:2015)) %>%
-#  mutate(french = sum(french_or_french_creole, french_incl_patois_cajun, french_creole, na.rm = TRUE)) %>% 
-  group_by(Year) %>% 
-  summarize(pct_french = mean(french_or_french_creole, na.rm = TRUE) /
-                         mean(total) * 100)
-french_data
-```
-
-```{r}
-french_plot <-
-  ggplot(data = french_data, aes(x = Year, y = pct_french)) +
-    geom_point() +
-    geom_line() +
-    labs(y = "Average % of households speaking French")
-french_plot
-```
 
 
 
